@@ -1,0 +1,11 @@
+[package]
+name = "eth_abi"
+description = "EVM-compatible ABI encoder/decoder"
+keywords = ["blockchain", "abi", "ethereum", "evm", "encoding"]
+categories = ["no-std", "data-structures", "cryptography::cryptocurrencies"]
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+alloy-primitives = "0.8.23"
+thiserror = "2.0.12"
