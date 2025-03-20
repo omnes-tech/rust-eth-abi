@@ -65,7 +65,7 @@ pub fn get_parameter_types(t: &str) -> Result<Vec<&str>, CodecError> {
     Ok(parameter_types)
 }
 
-fn split_parameter_types(t: &str) -> Vec<&str> {
+pub fn split_parameter_types(t: &str) -> Vec<&str> {
     let mut result = Vec::new();
     let mut start = 0;
     let mut depth = 0;

@@ -1,14 +1,46 @@
 use crate::codec::traits::EncodeCodec;
 use crate::codec::types::Value;
 use crate::codec::utils::{get_collection_i, pad_left, pad_right};
-use crate::common::{check_type_and_value, is_array, is_dynamic, is_tuple};
+use crate::common::{check_type_and_value, is_array, is_dynamic, is_tuple, split_parameter_types};
 use crate::errors::CodecError;
 use alloy_primitives::aliases::U256;
+use alloy_primitives::utils::keccak256;
 
 #[derive(Debug)]
 struct DynamicPlaceholder {
     header_offset: usize,
     footer_offset: usize,
+}
+
+pub fn abi_encode_with_selector(
+    selector: &[u8; 4],
+    type_strs: &Vec<&str>,
+    values: &Vec<Value>,
+) -> Result<Vec<u8>, CodecError> {
+    let encoded = abi_encode(&type_strs, values)?;
+
+    Ok(selector
+        .to_vec()
+        .into_iter()
+        .chain(encoded.into_iter())
+        .collect())
+}
+
+pub fn abi_encode_selector(signature: &str) -> Result<Vec<u8>, CodecError> {
+    let selector = keccak256(signature.as_bytes());
+
+    Ok(selector.to_bytes_vec()[0..4].to_vec())
+}
+
+pub fn abi_encode_with_singature(
+    signature: &str,
+    values: &Vec<Value>,
+) -> Result<Vec<u8>, CodecError> {
+    let selector = abi_encode_selector(signature)?;
+    let type_strs = split_parameter_types(signature);
+    let encoded = abi_encode(&type_strs, values)?;
+
+    Ok(selector.into_iter().chain(encoded.into_iter()).collect())
 }
 
 pub fn abi_encode_packed(
