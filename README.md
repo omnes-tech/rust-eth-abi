@@ -12,4 +12,5 @@
 
 ### Decode functions:
 
-
+- `abi_decode`
+- `abi_decode_with_signature`
