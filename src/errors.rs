@@ -14,4 +14,12 @@ pub enum CodecError {
     InvalidTypeAndValue(String, String),
     #[error("Lengths mismatch: {0} != {1}")]
     LengthsMismatch(usize, usize),
+
+    // decode
+    #[error("Invalid value length: {0}")]
+    InvalidValueLength(usize),
+    #[error("Unsupported type: {0}")]
+    UnsupportedType(String),
+    #[error("Invalid selector")]
+    InvalidSelector,
 }

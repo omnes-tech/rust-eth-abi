@@ -103,43 +103,54 @@ pub fn split_parameter_types(t: &str) -> Vec<&str> {
 }
 
 pub fn check_type_and_value<T: EncodeCodec>(t: &str, v: &T) -> bool {
-    t == v.eth_type()
-        && match t {
-            "uint8" | "int8" | "bool" | "bytes1" => v.bytes_length() == 1,
-            "uint16" | "int16" | "bytes2" => v.bytes_length() == 2,
-            "uint24" | "int24" | "bytes3" => v.bytes_length() == 3,
-            "uint32" | "int32" | "bytes4" => v.bytes_length() == 4,
-            "uint40" | "int40" | "bytes5" => v.bytes_length() == 5,
-            "uint48" | "int48" | "bytes6" => v.bytes_length() == 6,
-            "uint56" | "int56" | "bytes7" => v.bytes_length() == 7,
-            "uint64" | "int64" | "bytes8" => v.bytes_length() == 8,
-            "uint72" | "int72" | "bytes9" => v.bytes_length() == 9,
-            "uint80" | "int80" | "bytes10" => v.bytes_length() == 10,
-            "uint88" | "int88" | "bytes11" => v.bytes_length() == 11,
-            "uint96" | "int96" | "bytes12" => v.bytes_length() == 12,
-            "uint104" | "int104" | "bytes13" => v.bytes_length() == 13,
-            "uint112" | "int112" | "bytes14" => v.bytes_length() == 14,
-            "uint120" | "int120" | "bytes15" => v.bytes_length() == 15,
-            "uint128" | "int128" | "bytes16" => v.bytes_length() == 16,
-            "uint136" | "int136" | "bytes17" => v.bytes_length() == 17,
-            "uint144" | "int144" | "bytes18" => v.bytes_length() == 18,
-            "uint152" | "int152" | "bytes19" => v.bytes_length() == 19,
-            "uint160" | "int160" | "bytes20" | "address" => v.bytes_length() == 20,
-            "uint168" | "int168" | "bytes21" => v.bytes_length() == 21,
-            "uint176" | "int176" | "bytes22" => v.bytes_length() == 22,
-            "uint184" | "int184" | "bytes23" => v.bytes_length() == 23,
-            "uint192" | "int192" | "bytes24" => v.bytes_length() == 24,
-            "uint200" | "int200" | "bytes25" => v.bytes_length() == 25,
-            "uint208" | "int208" | "bytes26" => v.bytes_length() == 26,
-            "uint216" | "int216" | "bytes27" => v.bytes_length() == 27,
-            "uint224" | "int224" | "bytes28" => v.bytes_length() == 28,
-            "uint232" | "int232" | "bytes29" => v.bytes_length() == 29,
-            "uint240" | "int240" | "bytes30" => v.bytes_length() == 30,
-            "uint248" | "int248" | "bytes31" => v.bytes_length() == 31,
-            "uint256" | "int256" | "bytes32" => v.bytes_length() == 32,
-            "string" | "bytes" => true,
-            _ => false,
+    if t == v.eth_type() {
+        if t == "bytes" || t == "string" {
+            return true;
         }
+
+        return v.bytes_length() == get_bytes_from_type(t);
+    }
+
+    false
+}
+
+pub fn get_bytes_from_type(type_str: &str) -> usize {
+    match type_str {
+        "uint8" | "int8" | "bool" | "bytes1" => 1,
+        "uint16" | "int16" | "bytes2" => 2,
+        "uint24" | "int24" | "bytes3" => 3,
+        "uint32" | "int32" | "bytes4" => 4,
+        "uint40" | "int40" | "bytes5" => 5,
+        "uint48" | "int48" | "bytes6" => 6,
+        "uint56" | "int56" | "bytes7" => 7,
+        "uint64" | "int64" | "bytes8" => 8,
+        "uint72" | "int72" | "bytes9" => 9,
+        "uint80" | "int80" | "bytes10" => 10,
+        "uint88" | "int88" | "bytes11" => 11,
+        "uint96" | "int96" | "bytes12" => 12,
+        "uint104" | "int104" | "bytes13" => 13,
+        "uint112" | "int112" | "bytes14" => 14,
+        "uint120" | "int120" | "bytes15" => 15,
+        "uint128" | "int128" | "bytes16" => 16,
+        "uint136" | "int136" | "bytes17" => 17,
+        "uint144" | "int144" | "bytes18" => 18,
+        "uint152" | "int152" | "bytes19" => 19,
+        "uint160" | "int160" | "bytes20" | "address" => 20,
+        "uint168" | "int168" | "bytes21" => 21,
+        "uint176" | "int176" | "bytes22" => 22,
+        "uint184" | "int184" | "bytes23" => 23,
+        "uint192" | "int192" | "bytes24" => 24,
+        "uint200" | "int200" | "bytes25" => 25,
+        "uint208" | "int208" | "bytes26" => 26,
+        "uint216" | "int216" | "bytes27" => 27,
+        "uint224" | "int224" | "bytes28" => 28,
+        "uint232" | "int232" | "bytes29" => 29,
+        "uint240" | "int240" | "bytes30" => 30,
+        "uint248" | "int248" | "bytes31" => 31,
+        "uint256" | "int256" | "bytes32" => 32,
+        "bytes" | "string" => u64::MAX as usize,
+        _ => 0,
+    }
 }
 
 #[cfg(test)]
